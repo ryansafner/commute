@@ -1,0 +1,112 @@
+---
+title: "Commute"
+author: "Ryan Safner"
+date: "Last Updated: `r format(Sys.time(), '%d %B, %Y')`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Note: This is still a work in progress, especially with very few data points. This will be updated weekly.
+
+# Creating the Data
+
+```{r }
+date<-as.Date(c("09/20/2018","09/20/2018"),"%m/%d/%Y")
+leave.at<-as.Date(c("8:10","15:23"),"%H:%M")
+time.total<-c(78,76)
+home.exit<-c("Main",NA)
+time.to.from.16<-c(7,14)
+time.16<-c(14,9)
+time.16.to.from.270<-c(8,18)
+time.270<-c(38,35)
+through.bethesda<-c(0,1)
+afternoon<-c(0,1)
+day<-c("Thursday","Thursday")
+construction<-c(1,0)
+accident<-c(0,0)
+weather<-c("clear", "clear")
+
+commute<-data.frame(date,
+                    leave.at,
+                    time.total,
+                    home.exit,
+                    time.to.from.16,
+                    time.16,
+                    time.16.to.from.270,
+                    time.270,
+                    through.bethesda,
+                    afternoon,
+                    day,
+                    construction,
+                    accident,
+                    weather)
+```
+
+# Creating a Time-Distance Plot
+```{r}
+#distances in miles 
+d.to.16<-0.3
+d.16<-5.4
+d.16.to.270<-5
+d.270.fred<-35.8
+
+distance.segment.0<-0
+distance.segment.1<-d.to.16
+distance.segment.2<-(distance.segment.1+d.16)
+distance.segment.3<-(distance.segment.2+d.16.to.270)
+distance.segment.4<-(distance.segment.3+d.270.fred)
+
+distance.to.work<-c(distance.segment.0,distance.segment.1,distance.segment.2,distance.segment.3,distance.segment.4)
+
+segments<-c("","To 16th St","16th St","Georgia Ave", "I-270")
+
+time.segment.0<-0
+time.segment.1<-commute$time.to.from.16[1]
+time.segment.2<-(time.segment.1+commute$time.16[1])
+time.segment.3<-(time.segment.2+commute$time.16.to.from.270[1])
+time.segment.4<-(time.segment.3+commute$time.270[1])
+
+time.to.work<-c(time.segment.0,time.segment.1,time.segment.2,time.segment.3,time.segment.4)
+
+position.to.work<-data.frame(segments, distance.to.work,time.to.work)
+```
+
+```{r}
+library("ggplot2")
+commute.map<-ggplot(position.to.work, aes(x=time.to.work,y=distance.to.work))+
+  geom_point()+geom_line(color="green")+
+  annotate("text",x=c(0,4,15,25,45),y=c(0,2,4.5,10,25),label=position.to.work$segments)+
+  xlab("Time in Minutes")+ylab("Distance in Miles")+scale_x_continuous(breaks=c(0,5,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80))+theme_bw()
+commute.map
+```
+
+
+## Summary Statistics
+
+```{r}
+summary(commute)
+```
+
+## Scatters of Day, Leave Time, Bethesda, vs. Time
+
+These are just ideas for later. 
+
+```{r}
+commute.scatter.leave<-ggplot()
+```
+
+# Regressions
+
+```{r}
+commute.time.reg<-lm(time.total~afternoon, data=commute)
+summary(commute.time.reg)
+```
+
+## Export a Table
+```{r , results='asis',warning=FALSE,message=FALSE}
+library("stargazer")
+stargazer(commute.time.reg,type="html")
+```
