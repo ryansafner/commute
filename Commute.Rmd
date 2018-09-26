@@ -14,21 +14,21 @@ Note: This is still a work in progress, especially with very few data points. Th
 # Creating the Data
 
 ```{r }
-date<-as.Date(c("09/20/2018","09/20/2018"),"%m/%d/%Y")
-leave.at<-as.Date(c("8:10","15:23"),"%H:%M")
-time.total<-c(78,76)
-home.exit<-c("Main",NA)
-time.to.from.16<-c(7,14)
-time.16<-c(14,9)
-time.16.to.from.270<-c(8,18)
-time.270<-c(38,35)
-through.bethesda<-c(0,1)
-afternoon<-c(0,1)
-day<-c("Thursday","Thursday")
-construction<-c(1,0)
-accident<-c(0,0)
-weather<-c("clear", "clear")
-
+date<-as.Date(c("09/20/2018","09/20/2018","09/24/2018","09/24/2018"),"%m/%d/%Y")
+leave.at<-as.Date(c("8:10","15:23", "8:29","16:39"),"%H:%M")
+time.total<-c(78,76,69,80)
+home.exit<-c("Main",NA,"Main",NA)
+time.to.from.16<-c(7,14,7,11)
+time.16<-c(14,9,15,10)
+time.16.to.from.270<-c(8,18,10,19)
+time.270<-c(38,35,37,39)
+through.bethesda<-c(0,1,0,1)
+afternoon<-c(0,1,0,1)
+day<-c("Thursday","Thursday","Monday","Monday")
+construction<-c(1,0,0,0)
+accident<-c(0,0,0,0)
+weather<-c("clear", "clear","light rain", "light rain")
+month<-c(9,9,9,9)
 commute<-data.frame(date,
                     leave.at,
                     time.total,
@@ -42,7 +42,8 @@ commute<-data.frame(date,
                     day,
                     construction,
                     accident,
-                    weather)
+                    weather,
+                    month)
 ```
 
 # Creating a Time-Distance Plot
